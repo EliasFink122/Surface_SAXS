@@ -75,9 +75,31 @@ def crack(num: int, amp: float, pos: float, width: float) -> np.ndarray:
         surface[i] = np.min([0, amp*(2*np.abs(x-pos)/width-1)])
     return surface
 
+def blob(num: int, amp: float, spacing: float, width: float) -> np.ndarray:
+    '''
+    Blobs surface pattern
+
+    Args:
+        num: number of surface height values
+        amp: amplitude of surface modulation
+        spacing: spacing between blobs
+        width: width of crack
+    
+    Returns:
+        surface profile
+    '''
+    surface = np.zeros(num)
+    for i, _ in enumerate(surface):
+        x = i - num/2
+        surface[i] = amp*np.sum([np.add(np.exp(-((x-j*spacing)/(2*width))**4),
+                                        np.exp(-((x+(j+1)*spacing)/(2*width))**4))
+                                for j in range(round(num/spacing))])
+    return surface
+
 if __name__ == "__main__":
-    pattern = rough(100, 1, 1000)
+    # pattern = rough(100, 1, 1000)
     # pattern = sinusoidal(100, 1, 0.1)
     # pattern = crack(100, 1, 0, 40)
+    pattern = blob(1000, 1, 200, 20)
     plt.plot(range(len(pattern)), pattern)
     plt.show()
