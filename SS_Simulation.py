@@ -54,7 +54,8 @@ def saxs2d(profile, log = False) -> np.ndarray:
 if __name__ == "__main__":
     # pattern = rough(100, 1, 1000)
     # pattern = sinusoidal(100, 1, 0.1)
-    pattern = crack(1000, 1, 0, 40)
-    # pattern = blob(100, 1, 20, 2)
-    img = saxs(pattern)
+    # pattern = crack(1000, 1, 0, 40)
+    pattern = blob(1000, 1, 200, 20)
+    img = saxs(pattern, False)
+    save(img)
     plt.show()

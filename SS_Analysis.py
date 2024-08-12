@@ -10,7 +10,7 @@ Analyse SAXS data.
 import numpy as np
 import matplotlib.pyplot as plt
 
-def transform(arr: np.nadrray) -> np.ndarray:
+def transform(arr: np.ndarray) -> np.ndarray:
     '''
     Transform detector read in to surface profile
 
@@ -26,11 +26,11 @@ def transform(arr: np.nadrray) -> np.ndarray:
     arr = np.sqrt(arr) # convert intensity to amplitude
 
     if len(np.shape(arr)) == 1:
-        profile = np.fft.fft(arr)
+        profile = np.abs(np.fft.fft(arr))
         plt.plot(range(len(profile)), profile)
         return profile
     if len(np.shape(arr)) == 2:
-        profile = np.fft.fft2(arr)
+        profile = np.abs(np.fft.fft2(arr))
         plt.imshow(profile)
         return profile
     raise ValueError("Input array needs to be one- or two-dimensional.")
@@ -38,3 +38,4 @@ def transform(arr: np.nadrray) -> np.ndarray:
 if __name__ == '__main__':
     data = np.loadtxt('data')
     pattern = transform(data)
+    plt.show()

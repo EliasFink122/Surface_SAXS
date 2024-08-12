@@ -140,6 +140,5 @@ if __name__ == "__main__":
     # pattern = sinusoidal(100, 1, 0.1)
     # pattern = crack(100, 1, 0, 40)
     pattern = blob(1000, 1, 200, 20)
-    save(pattern)
     plt.plot(range(len(pattern)), pattern)
     plt.show()
