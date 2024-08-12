@@ -28,9 +28,9 @@ def saxs(profile: np.ndarray, half = True) -> np.ndarray:
     xs_img = np.fft.fft(profile)
     if half:
         plt.plot(range(int(len(xs_img)/2)), xs_img[:int(len(xs_img)/2)])
-        return np.abs(xs_img[:int(len(xs_img)/2)])
+        return np.square(np.abs(xs_img[:int(len(xs_img)/2)]))
     plt.plot(range(len(xs_img)), xs_img)
-    return np.abs(xs_img)
+    return np.square(np.abs(xs_img))
 
 def saxs2d(profile, log = False) -> np.ndarray:
     '''
@@ -47,9 +47,9 @@ def saxs2d(profile, log = False) -> np.ndarray:
     if log:
         plt.imshow(np.log(np.abs(xs_img)))
     else:
-        plt.imshow(np.abs(xs_img))
+        plt.imshow(np.square(np.abs(xs_img)))
     plt.colorbar()
-    return xs_img
+    return np.square(np.abs(xs_img))
 
 if __name__ == "__main__":
     # pattern = rough(100, 1, 1000)
