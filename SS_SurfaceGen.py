@@ -12,6 +12,10 @@ Methods:
         periodic, smooth surface pattern
     crack:
         even surface with big crack
+    blob:
+        super Gaussian shape blobs on surface
+    make2d:
+        tensor product of array with itself
 """
 import numpy as np
 import matplotlib.pyplot as plt
@@ -95,6 +99,18 @@ def blob(num: int, amp: float, spacing: float, width: float) -> np.ndarray:
                                         np.exp(-((x+(j+1)*spacing)/(2*width))**4))
                                 for j in range(round(num/spacing))])
     return surface
+
+def make2d(arr: np.ndarray) -> np.ndarray:
+    '''
+    Take tensor product of array with itself
+
+    Args:
+        arr: 1d numpy array
+
+    Returns:
+        2d array
+    '''
+    return np.tensordot(arr, arr, 0)
 
 if __name__ == "__main__":
     # pattern = rough(100, 1, 1000)
