@@ -125,10 +125,21 @@ def expand2d(arr: np.ndarray) -> np.ndarray:
     new_arr = [arr for _ in arr]
     return np.array(new_arr)
 
+def save(arr: np.ndarray, fname = ""):
+    '''
+    Save data in txt file
+
+    Args:
+        arr: array to save
+        fname: file name
+    '''
+    np.savetxt('data' + fname, arr)
+
 if __name__ == "__main__":
     # pattern = rough(100, 1, 1000)
     # pattern = sinusoidal(100, 1, 0.1)
     # pattern = crack(100, 1, 0, 40)
     pattern = blob(1000, 1, 200, 20)
+    save(pattern)
     plt.plot(range(len(pattern)), pattern)
     plt.show()

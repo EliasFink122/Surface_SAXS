@@ -34,3 +34,7 @@ def transform(arr: np.nadrray) -> np.ndarray:
         plt.imshow(profile)
         return profile
     raise ValueError("Input array needs to be one- or two-dimensional.")
+
+if __name__ == '__main__':
+    data = np.loadtxt('data')
+    pattern = transform(data)
