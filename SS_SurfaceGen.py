@@ -1,0 +1,83 @@
+"""
+Created on Mon Aug 12 2024
+
+@author: Elias Fink (elias.fink22@imperial.ac.uk)
+
+Generate surface profile for SAXS simulation.
+
+Methods:
+    rough:
+        random rough surface pattern
+    sinusoidal:
+        periodic, smooth surface pattern
+    crack:
+        even surface with big crack
+"""
+import numpy as np
+import matplotlib.pyplot as plt
+
+def rough(num: int, amp: float, smooth = 0) -> np.ndarray:
+    '''
+    Rough surface pattern
+
+    Args:
+        num: number of surface height values
+        amp: amplitude of surface roughness
+        smooth: number of smoothings
+    
+    Returns:
+        surface profile
+    '''
+    surface = amp*np.random.rand(num)
+    if smooth == 0:
+        return surface
+    smoothed_surface = surface.copy()
+    for _ in range(smooth):
+        for j, val in enumerate(surface):
+            if j in (0, num-1):
+                continue
+            smoothed_surface[j] = (surface[j-1] + 2*val + surface[j+1])/4
+    return smoothed_surface
+
+def sinusoidal(num: int, amp: float, freq: float) -> np.ndarray:
+    '''
+    Sinusoidal surface pattern
+
+    Args:
+        num: number of surface height values
+        amp: amplitude of surface modulation
+        freq: frequency of surface modulation
+    
+    Returns:
+        surface profile
+    '''
+    surface = np.zeros(num)
+    for i, _ in enumerate(surface):
+        surface[i] = amp*np.sin(freq*i)
+    return surface
+
+def crack(num: int, amp: float, pos: float, width: float) -> np.ndarray:
+    '''
+    Cracked surface pattern
+
+    Args:
+        num: number of surface height values
+        amp: amplitude of surface modulation
+        pos: centre of crack
+        width: width of crack
+    
+    Returns:
+        surface profile
+    '''
+    surface = np.zeros(num)
+    for i, _ in enumerate(surface):
+        x = i - num/2
+        surface[i] = np.min([0, amp*(2*np.abs(x-pos)/width-1)])
+    return surface
+
+if __name__ == "__main__":
+    pattern = rough(100, 1, 1000)
+    # pattern = sinusoidal(100, 1, 0.1)
+    # pattern = crack(100, 1, 0, 40)
+    plt.plot(range(len(pattern)), pattern)
+    plt.show()
