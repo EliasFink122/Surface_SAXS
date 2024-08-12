@@ -41,7 +41,7 @@ def saxs2d(profile) -> np.ndarray:
     '''
     profile = make2d(profile)
     xs_img = np.fft.fft2(profile)
-    plt.imshow(np.abs(xs_img))
+    plt.imshow(np.log(np.abs(xs_img)))
     plt.colorbar()
     return xs_img
 

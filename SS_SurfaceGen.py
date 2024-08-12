@@ -112,6 +112,19 @@ def make2d(arr: np.ndarray) -> np.ndarray:
     '''
     return np.tensordot(arr, arr, 0)
 
+def expand2d(arr: np.ndarray) -> np.ndarray:
+    '''
+    Expand array to 2d
+
+    Args:
+        arr: 1d numpy array
+
+    Returns:
+        2d array
+    '''
+    new_arr = [arr for _ in arr]
+    return np.array(new_arr)
+
 if __name__ == "__main__":
     # pattern = rough(100, 1, 1000)
     # pattern = sinusoidal(100, 1, 0.1)
