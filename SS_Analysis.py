@@ -51,4 +51,5 @@ def transform(arr: np.ndarray) -> np.ndarray:
 if __name__ == '__main__':
     data = np.loadtxt('data.txt')
     pattern = transform(data)
+    plt.savefig("reconstructed_surface.png", dpi = 1000)
     plt.show()
