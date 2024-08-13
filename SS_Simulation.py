@@ -56,7 +56,7 @@ def saxs2d(profile, log = False) -> np.ndarray:
     xs_img = np.roll(xs_img, int(len(xs_img[0])/2), 1)
 
     plt.figure()
-    plt.title("SAXS image")
+    plt.title("SAXS intensity")
     plt.xlabel("x [mm]")
     plt.ylabel("y [mm]")
     if log:

@@ -5,7 +5,9 @@ Created on Mon Aug 12 2024
 
 Analyse SAXS data.
 
-
+Methods:
+    transform:
+        reconstruct surface profile from intensity
 """
 import numpy as np
 import matplotlib.pyplot as plt
