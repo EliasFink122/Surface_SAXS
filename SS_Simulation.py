@@ -24,6 +24,9 @@ def saxs(profile: np.ndarray) -> np.ndarray:
 
     Returns:
         SAXS detector image
+
+    Raises:
+        ValueError: if input array is not one dimensional
     '''
     if len(np.shape(profile)) != 1:
         raise ValueError("This function only works for 1d array. Use saxs2d() for 2d.")
@@ -47,7 +50,7 @@ def saxs2d(profile, log = False) -> np.ndarray:
         SAXS detector image
     '''
     if len(np.shape(profile)) == 1:
-        profile = expand2d(profile)
+        profile = make2d(profile)
     xs_img = np.fft.fft2(profile)
     xs_img = np.roll(xs_img, int(len(xs_img)/2), 0)
     xs_img = np.roll(xs_img, int(len(xs_img[0])/2), 1)
@@ -66,9 +69,9 @@ def saxs2d(profile, log = False) -> np.ndarray:
 if __name__ == "__main__":
     # pattern = rough(100, 1, 1000)
     # pattern = sinusoidal(100, 1, 0.1)
-    pattern = crack(1000, 1, 0, 40)
-    # pattern = blob(1000, 1, 200, 20)
+    # pattern = crack(1000, 1, 0, 40)
+    pattern = blob(1000, 1, 200, 20)
     # pattern = laser(1000, 1, 20)
-    img = saxs(pattern)
+    img = saxs2d(pattern)
     save(img)
     plt.show()
