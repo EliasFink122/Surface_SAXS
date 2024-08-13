@@ -10,7 +10,6 @@ Methods:
         reconstruct surface profile from intensity
 """
 import numpy as np
-from scipy.signal import deconvolve
 import matplotlib.pyplot as plt
 
 def transform(arr: np.ndarray) -> np.ndarray:
