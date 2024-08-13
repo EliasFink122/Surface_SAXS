@@ -14,8 +14,16 @@ Methods:
         even surface with big crack
     blob:
         super Gaussian shape blobs on surface
+    laser:
+        laser imprint shape
+    test:
+        test delta function shape
     make2d:
         tensor product of array with itself
+    expand2d:
+        expand array to 2d
+    save:
+        save array to txt
 """
 import numpy as np
 import matplotlib.pyplot as plt
@@ -119,6 +127,20 @@ def laser(num: int, amp: float, width: float) -> np.ndarray:
             y = j - num/2
             surface[i, j] = amp * np.exp(-((x**2 + y**2)/(2*width)**2)**5)
     return surface
+
+def test(num: int) -> np.ndarray:
+    '''
+    Test data function signal
+
+    Args:
+        num: number of surface height values
+
+    Returns:
+        surface profile
+    '''
+    surface = np.zeros(num)
+    surface[0] = 1
+    return np.roll(surface, int(len(surface)/2))
 
 def make2d(arr: np.ndarray) -> np.ndarray:
     '''
