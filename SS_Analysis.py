@@ -25,17 +25,26 @@ def transform(arr: np.ndarray) -> np.ndarray:
     '''
     arr = np.sqrt(arr) # convert intensity to amplitude
 
+    plt.figure()
+    plt.title("Reconstructed surface")
+
     if len(np.shape(arr)) == 1:
         profile = np.abs(np.fft.fft(arr))
         plt.plot(range(len(profile)), profile)
+        plt.xlabel("x [μm]")
+        plt.ylabel("Height [μm]")
         return profile
     if len(np.shape(arr)) == 2:
         profile = np.abs(np.fft.fft2(arr))
         plt.imshow(profile)
+        plt.xlabel("x [μm]")
+        plt.ylabel("y [μm]")
+        plt.colorbar(label="Height [μm]")
         return profile
     raise ValueError("Input array needs to be one- or two-dimensional.")
 
 if __name__ == '__main__':
-    data = np.loadtxt('data')
+    data = np.loadtxt('data.txt')
     pattern = transform(data)
+    plt.savefig("reconstructed_surface.png", dpi = 1000)
     plt.show()

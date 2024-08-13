@@ -26,6 +26,10 @@ def saxs(profile: np.ndarray, half = True) -> np.ndarray:
         SAXS detector image
     '''
     xs_img = np.fft.fft(profile)
+    plt.figure()
+    plt.title("SAXS image")
+    plt.xlabel("x [mm]")
+    plt.ylabel("Intensity [A.U.]")
     if half:
         plt.plot(range(int(len(xs_img)/2)), xs_img[:int(len(xs_img)/2)])
         return np.square(np.abs(xs_img[:int(len(xs_img)/2)]))
@@ -44,11 +48,16 @@ def saxs2d(profile, log = False) -> np.ndarray:
     '''
     profile = make2d(profile)
     xs_img = np.fft.fft2(profile)
+
+    plt.figure()
+    plt.title("SAXS image")
+    plt.xlabel("x [mm]")
+    plt.ylabel("y [mm]")
     if log:
         plt.imshow(np.log(np.abs(xs_img)))
     else:
         plt.imshow(np.square(np.abs(xs_img)))
-    plt.colorbar()
+    plt.colorbar(label="Intensity [A.U.]")
     return np.square(np.abs(xs_img))
 
 if __name__ == "__main__":
@@ -56,6 +65,6 @@ if __name__ == "__main__":
     # pattern = sinusoidal(100, 1, 0.1)
     # pattern = crack(1000, 1, 0, 40)
     pattern = blob(1000, 1, 200, 20)
-    img = saxs(pattern, False)
+    img = saxs2d(pattern, False)
     save(img)
     plt.show()

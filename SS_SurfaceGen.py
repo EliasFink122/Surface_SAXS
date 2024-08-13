@@ -133,12 +133,17 @@ def save(arr: np.ndarray, fname = ""):
         arr: array to save
         fname: file name
     '''
-    np.savetxt('data' + fname, arr)
+    np.savetxt('data' + fname + '.txt', arr)
 
 if __name__ == "__main__":
     # pattern = rough(100, 1, 1000)
     # pattern = sinusoidal(100, 1, 0.1)
     # pattern = crack(100, 1, 0, 40)
     pattern = blob(1000, 1, 200, 20)
-    plt.plot(range(len(pattern)), pattern)
+    plt.title("Surface profile")
+    plt.imshow(make2d(pattern))
+    plt.xlabel("x [μm]")
+    plt.ylabel("y [μm]")
+    plt.colorbar(label="Height [μm]")
+    # plt.plot(range(len(pattern)), pattern)
     plt.show()
