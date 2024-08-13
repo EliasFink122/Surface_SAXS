@@ -30,12 +30,14 @@ def transform(arr: np.ndarray) -> np.ndarray:
 
     if len(np.shape(arr)) == 1:
         profile = np.abs(np.fft.fft(arr))
+        profile = profile/np.max(profile)
         plt.plot(range(len(profile)), profile)
         plt.xlabel("x [μm]")
         plt.ylabel("Height [μm]")
         return profile
     if len(np.shape(arr)) == 2:
         profile = np.abs(np.fft.fft2(arr))
+        profile = profile/np.max(profile)
         plt.imshow(profile)
         plt.xlabel("x [μm]")
         plt.ylabel("y [μm]")
