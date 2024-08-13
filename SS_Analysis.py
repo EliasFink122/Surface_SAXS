@@ -27,15 +27,15 @@ def transform(arr: np.ndarray) -> np.ndarray:
     Raises:
         ValueError: if input array does not have correct dimensions
     '''
-    arr = np.sqrt(arr) # convert intensity to amplitude
+    arr = np.sqrt(arr) # intensity -> amplitude
 
     if len(np.shape(arr)) == 1:
         plt.figure()
         plt.title("Reconstructed surface")
         profile = np.abs(np.fft.ifft(arr))
-        profile = profile/np.max(profile)
         profile = np.roll(profile, int(len(profile)/2))
         profile = deconvolve(profile)
+        profile = profile/np.max(profile)
         plt.plot(range(len(profile)), profile)
         plt.xlabel("x [μm]")
         plt.ylabel("Height [μm]")
@@ -45,10 +45,10 @@ def transform(arr: np.ndarray) -> np.ndarray:
         fig, (ax1, ax2) = plt.subplots(1, 2)
         fig.suptitle("Reconstructed surface")
         profile = np.abs(np.fft.ifft2(arr))
-        profile = profile/np.max(profile)
         profile = np.roll(profile, int(len(profile)/2), 0)
         profile = np.roll(profile, int(len(profile[0])/2), 1)
         profile = deconvolve(profile)
+        profile = profile/np.max(profile)
         ax1.set_title("1-d surface")
         ax1.plot(range(len(profile[int(len(profile)/2)])),
                  profile[int(len(profile)/2)])
