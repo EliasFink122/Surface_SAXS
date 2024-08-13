@@ -100,6 +100,26 @@ def blob(num: int, amp: float, spacing: float, width: float) -> np.ndarray:
                                 for j in range(round(num/spacing))])
     return surface
 
+def laser(num: int, amp: float, width: float) -> np.ndarray:
+    '''
+    Laser imprint pattern
+
+    Args:
+        num: number of surface height values
+        amp: amplitude of laser imprint
+        width: width of laser
+    
+    Returns:
+        surface profile
+    '''
+    surface = np.zeros((num, num))
+    for i, row in enumerate(surface):
+        for j, _ in enumerate(row):
+            x = i - num/2
+            y = j - num/2
+            surface[i, j] = amp * np.exp(-((x**2 + y**2)/(2*width)**2)**5)
+    return surface
+
 def make2d(arr: np.ndarray) -> np.ndarray:
     '''
     Take tensor product of array with itself
