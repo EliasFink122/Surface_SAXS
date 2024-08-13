@@ -8,6 +8,8 @@ Analyse SAXS data.
 Methods:
     transform:
         reconstruct surface profile from intensity
+    deconvolve:
+        correction for optical system
 """
 import numpy as np
 import matplotlib.pyplot as plt
@@ -31,8 +33,9 @@ def transform(arr: np.ndarray) -> np.ndarray:
         plt.figure()
         plt.title("Reconstructed surface")
         profile = np.abs(np.fft.ifft(arr))
-        profile = np.roll(profile, int(len(profile)/2))
         profile = profile/np.max(profile)
+        profile = np.roll(profile, int(len(profile)/2))
+        profile = deconvolve(profile)
         plt.plot(range(len(profile)), profile)
         plt.xlabel("x [μm]")
         plt.ylabel("Height [μm]")
@@ -43,12 +46,14 @@ def transform(arr: np.ndarray) -> np.ndarray:
         fig.suptitle("Reconstructed surface")
         profile = np.abs(np.fft.ifft2(arr))
         profile = profile/np.max(profile)
+        profile = np.roll(profile, int(len(profile)/2), 0)
         profile = np.roll(profile, int(len(profile[0])/2), 1)
+        profile = deconvolve(profile)
         ax1.set_title("1-d surface")
-        ax1.plot(range(len(profile[0])), profile[0])
+        ax1.plot(range(len(profile[int(len(profile)/2)])),
+                 profile[int(len(profile)/2)])
         ax1.set_xlabel("x [μm]")
         ax1.set_ylabel("Height [μm]")
-        profile = np.roll(profile, int(len(profile)/2), 0)
         ax2.set_title("2-d surface")
         img = ax2.imshow(profile)
         ax2.set_xlabel("x [μm]")
@@ -57,6 +62,30 @@ def transform(arr: np.ndarray) -> np.ndarray:
         fig.tight_layout()
         return profile
     raise ValueError("Input array needs to be one- or two-dimensional.")
+
+def deconvolve(arr: np.ndarray) -> np.ndarray:
+    '''
+    Deconvolve one or two dimensional array
+
+    Args:
+        arr: input array
+
+    Returns:
+        devonvolved
+    '''
+    if len(np.shape(arr)) == 1:
+        for i, val in enumerate(arr):
+            x = i-len(arr)
+            arr[i] = val/np.sinc(x/50)
+        return arr
+    for i, row in enumerate(arr):
+        x = i-len(arr)/2
+        for j, val in enumerate(row):
+            y = j-len(row)/2
+            decon = np.sinc(np.linalg.norm([x, y])/50)
+            if not np.isclose(decon, 0, atol=5e-2):
+                arr[i, j] = val/decon
+    return arr
 
 if __name__ == '__main__':
     data = np.loadtxt('data.txt')
