@@ -120,7 +120,7 @@ def blob(num: int, amp: float, spacing: float, width: float) -> np.ndarray:
                                 for j in range(round(num/spacing))])
     return surface
 
-def laser(num: int, amp: float, width: float) -> np.ndarray:
+def laser(num: int, amp: float, width: float, ratio = 1., pos = [0., 0.]) -> np.ndarray:
     '''
     Laser imprint pattern
 
@@ -128,6 +128,8 @@ def laser(num: int, amp: float, width: float) -> np.ndarray:
         num: number of surface height values
         amp: amplitude of laser imprint
         width: width of laser
+        ratio: ratio of x and y semi major axes
+        pos: position of beam
     
     Returns:
         surface profile
@@ -135,9 +137,9 @@ def laser(num: int, amp: float, width: float) -> np.ndarray:
     surface = np.zeros((num, num))
     for i, row in enumerate(surface):
         for j, _ in enumerate(row):
-            x = i - num/2
-            y = j - num/2
-            surface[i, j] = amp * np.exp(-((x**2 + y**2)/(2*width)**2)**5)
+            x = i - num/2 - pos[0]
+            y = j - num/2 - pos[1]
+            surface[i, j] = amp * np.exp(-((x**2 + (y/ratio)**2)/(2*width)**2)**5)
     return surface
 
 def test(num: int) -> np.ndarray:

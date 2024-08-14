@@ -103,11 +103,13 @@ def compare(num: int):
     fig, (ax1, ax2) = plt.subplots(1, 2)
     fig.suptitle("Comparison between surfaces")
 
-    # profile = laser(num, amp=1, width=num/10)
+    profile = np.sum([laser(num, amp=1, width=num/40, ratio=2, pos = [100, 150]),
+                    laser(num, amp=1, width=num/40, ratio=2, pos = [200, -200]),
+                    laser(num, amp=1, width=num/10, ratio=0.5, pos = [-300, 200])], axis = 0)
     # profile = sinusoidal(num, amp=1, freq=10/num)
     # profile = blob(num, 1, num/10, num/100)
-    # profile = crack(num, 1, num/4, num/10)
-    profile = expand2d(rough, num, 1, 20)
+    # profile = crack(num, 1, num/4, num/10) + crack(num, 1, -num/4, num/10)
+    # profile = expand2d(rough, num, 1, 10) + laser(num, 1, num/20)
     if len(np.shape(profile)) == 1:
         profile = make2d(profile)
         # profile = expand2d(profile)
