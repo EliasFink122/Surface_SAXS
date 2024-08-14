@@ -28,6 +28,11 @@ Methods:
 import numpy as np
 import matplotlib.pyplot as plt
 
+def conv(y, box_pts):
+        box = np.ones(box_pts)/box_pts
+        y_smooth = np.convolve(y, box, mode='same')
+        return y_smooth
+
 def rough(num: int, amp: float, smooth = 0) -> np.ndarray:
     '''
     Rough surface pattern
@@ -43,12 +48,7 @@ def rough(num: int, amp: float, smooth = 0) -> np.ndarray:
     surface = amp*np.random.rand(num)
     if smooth == 0:
         return surface
-    smoothed_surface = surface.copy()
-    for _ in range(smooth):
-        for j, val in enumerate(surface):
-            if j in (0, num-1):
-                continue
-            smoothed_surface[j] = (surface[j-1] + 2*val + surface[j+1])/4
+    smoothed_surface = conv(surface, smooth)
     return smoothed_surface
 
 def sinusoidal(num: int, amp: float, freq: float) -> np.ndarray:
@@ -154,18 +154,26 @@ def make2d(arr: np.ndarray) -> np.ndarray:
     '''
     return np.tensordot(arr, arr, 0)
 
-def expand2d(arr: np.ndarray) -> np.ndarray:
+def expand2d(arr, *args) -> np.ndarray:
     '''
     Expand array to 2d
 
     Args:
-        arr: 1d numpy array
+        arr: 1d numpy array or function
 
     Returns:
         2d array
     '''
-    new_arr = [arr for _ in arr]
-    return np.array(new_arr)
+    if isinstance(arr, (np.ndarray, list)):
+        new_arr = [arr for _ in arr]
+        return np.array(new_arr)
+    try:
+        new_arr = np.array([arr(*args) for _ in range(args[0])])
+        for i, col in enumerate(np.transpose(new_arr)):
+            new_arr[:, i] = conv(col, args[2])
+        return new_arr
+    except TypeError as exc:
+        raise TypeError("Input has to be array or function!") from exc
 
 def save(arr: np.ndarray, fname = ""):
     '''

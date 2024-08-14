@@ -106,7 +106,8 @@ def compare(num: int):
     # profile = laser(num, amp=1, width=num/10)
     # profile = sinusoidal(num, amp=1, freq=10/num)
     # profile = blob(num, 1, num/10, num/100)
-    profile = crack(num, 1, num/4, num/10)
+    # profile = crack(num, 1, num/4, num/10)
+    profile = expand2d(rough, num, 1, 20)
     if len(np.shape(profile)) == 1:
         profile = make2d(profile)
         # profile = expand2d(profile)
