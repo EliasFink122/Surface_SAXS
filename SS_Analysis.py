@@ -15,7 +15,7 @@ Methods:
 """
 import numpy as np
 import matplotlib.pyplot as plt
-from SS_SurfaceGen import rough, sinusoidal, crack, blob, laser
+from SS_SurfaceGen import rough, sinusoidal, crack, blob, laser, make2d, expand2d
 from SS_Simulation import saxs, saxs2d
 
 def transform(arr: np.ndarray, plot = True) -> np.ndarray:
@@ -90,9 +90,7 @@ def deconvolve(arr: np.ndarray) -> np.ndarray:
         x = i-len(arr)/2
         for j, val in enumerate(row):
             y = j-len(row)/2
-            decon = np.sinc(np.linalg.norm([x, y])/50)
-            if not np.isclose(decon, 0, atol=5e-2):
-                arr[i, j] = val/decon
+            arr[i, j] = val*np.sqrt(np.linalg.norm([x, y]))**2
     return arr
 
 def compare(num: int):
@@ -102,24 +100,32 @@ def compare(num: int):
     Args:
         num: number of surface elements
     '''
-    fig, (ax1, ax2) = plt.subplots(2, 1)
+    fig, (ax1, ax2) = plt.subplots(1, 2)
     fig.suptitle("Comparison between surfaces")
 
-    profile = laser(num, amp=1, width=num/10)
+    # profile = laser(num, amp=1, width=num/10)
+    # profile = sinusoidal(num, amp=1, freq=10/num)
+    # profile = blob(num, 1, num/10, num/100)
+    profile = crack(num, 1, num/4, num/10)
+    if len(np.shape(profile)) == 1:
+        profile = make2d(profile)
+        # profile = expand2d(profile)
     surf1 = ax1.imshow(profile)
     ax1.set_title("Surface profile")
     ax1.set_xlabel("x [μm]")
     ax1.set_ylabel("y [μm]")
-    plt.colorbar(surf1, ax=ax1)
+    plt.colorbar(surf1, ax=ax1, label='Height [μm]')
 
     img = saxs2d(profile, False)
 
-    reconstructed = transform(img)
+    reconstructed = transform(img, False)
     surf2 = ax2.imshow(reconstructed)
     ax2.set_title("Reconstructed profile")
     ax2.set_xlabel("x [μm]")
     ax2.set_ylabel("y [μm]")
-    plt.colorbar(surf2, ax=ax2)
+    plt.colorbar(surf2, ax=ax2, label='Height [μm]')
+
+    fig.tight_layout()
 
 if __name__ == '__main__':
     # data = np.loadtxt('data.txt')

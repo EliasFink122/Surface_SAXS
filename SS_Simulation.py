@@ -46,6 +46,8 @@ def saxs2d(profile, plot = True, log = False) -> np.ndarray:
 
     Args:
         profile: surface profile
+        plot: whether to plot SAXS image
+        log: whether to log output plot
 
     Returns:
         SAXS detector image
