@@ -134,4 +134,5 @@ if __name__ == '__main__':
     # data = np.loadtxt('data.txt')
     # pattern = transform(data)
     compare(1000)
+    plt.savefig("comparison.png", dpi = 1000)
     plt.show()
