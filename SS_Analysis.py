@@ -53,7 +53,6 @@ def transform(arr: np.ndarray, plot = True) -> np.ndarray:
         profile = np.abs(np.fft.ifft2(arr))
         profile = np.roll(profile, int(len(profile)/2), 0)
         profile = np.roll(profile, int(len(profile[0])/2), 1)
-        profile = profile/np.max(profile)
         profile = contrast(profile)
         ax1.set_title("1-d surface")
         ax1.plot(range(len(profile[int(len(profile)/2)])),
@@ -81,6 +80,7 @@ def contrast(arr: np.ndarray) -> np.ndarray:
     Returns:
         contrast boosted signal
     '''
+    arr = arr/np.max(arr)
     if len(np.shape(arr)) == 1:
         for i, val in enumerate(arr):
             if val > 0.1:
@@ -90,6 +90,7 @@ def contrast(arr: np.ndarray) -> np.ndarray:
         for j, val in enumerate(row):
             if val > 0.1:
                 arr[i, j] = 0
+    arr = arr/np.max(arr)
     return arr
 
 def compare(num: int):
