@@ -73,13 +73,13 @@ def transform(arr: np.ndarray, plot = True) -> np.ndarray:
 
 def contrast(arr: np.ndarray) -> np.ndarray:
     '''
-    Deconvolve one or two dimensional array
+    Remove bright spots to boost contrast on image.
 
     Args:
         arr: input signal
 
     Returns:
-        devonvolved signal
+        contrast boosted signal
     '''
     if len(np.shape(arr)) == 1:
         for i, val in enumerate(arr):
