@@ -38,8 +38,8 @@ def transform(arr: np.ndarray, plot = True) -> np.ndarray:
         plt.title("Reconstructed surface")
         profile = np.abs(np.fft.ifft(arr))
         profile = np.roll(profile, int(len(profile)/2))
-        # profile = deconvolve(profile)
         profile = profile/np.max(profile)
+        # profile = deconvolve(profile)
         plt.plot(range(len(profile)), profile)
         plt.xlabel("x [μm]")
         plt.ylabel("Height [μm]")
@@ -53,8 +53,8 @@ def transform(arr: np.ndarray, plot = True) -> np.ndarray:
         profile = np.abs(np.fft.ifft2(arr))
         profile = np.roll(profile, int(len(profile)/2), 0)
         profile = np.roll(profile, int(len(profile[0])/2), 1)
-        # profile = deconvolve(profile)
         profile = profile/np.max(profile)
+        profile = deconvolve(profile)
         ax1.set_title("1-d surface")
         ax1.plot(range(len(profile[int(len(profile)/2)])),
                  profile[int(len(profile)/2)])
@@ -90,7 +90,9 @@ def deconvolve(arr: np.ndarray) -> np.ndarray:
         x = i-len(arr)/2
         for j, val in enumerate(row):
             y = j-len(row)/2
-            arr[i, j] = val*np.sqrt(np.linalg.norm([x, y]))**2
+            #arr[i, j] = val*np.sqrt(np.linalg.norm([x, y]))**2
+            if val > 0.1:
+                arr[i, j] = 0
     return arr
 
 def compare(num: int):
@@ -104,7 +106,7 @@ def compare(num: int):
     fig.suptitle("Comparison between surfaces")
 
     profile = np.sum([laser(num, amp=1, width=num/40, ratio=2, pos = [100, 150]),
-                    laser(num, amp=1, width=num/40, ratio=2, pos = [200, -200]),
+                    laser(num, amp=1, width=num/30, ratio=1, pos = [200, -200]),
                     laser(num, amp=1, width=num/10, ratio=0.5, pos = [-300, 200])], axis = 0)
     # profile = sinusoidal(num, amp=1, freq=10/num)
     # profile = blob(num, 1, num/10, num/100)
@@ -134,5 +136,4 @@ if __name__ == '__main__':
     # data = np.loadtxt('data.txt')
     # pattern = transform(data)
     compare(1000)
-    plt.savefig("comparison.png", dpi = 1000)
     plt.show()
