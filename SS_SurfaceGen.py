@@ -6,6 +6,8 @@ Created on Mon Aug 12 2024
 Generate surface profile for SAXS simulation.
 
 Methods:
+    conv:
+        convolve array with box to smooth
     rough:
         random rough surface pattern
     sinusoidal:
@@ -29,9 +31,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def conv(y, box_pts):
-        box = np.ones(box_pts)/box_pts
-        y_smooth = np.convolve(y, box, mode='same')
-        return y_smooth
+    '''
+    Smooth array
+
+    Args:
+        y: array to be smoothed
+        box_pts: number of points to average over (strength of smooth)
+
+    Returns:
+        smoothed array
+    '''
+    box = np.ones(box_pts)/box_pts
+    y_smooth = np.convolve(y, box, mode='same')
+    return y_smooth
 
 def rough(num: int, amp: float, smooth = 0) -> np.ndarray:
     '''
