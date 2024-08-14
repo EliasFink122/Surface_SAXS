@@ -15,7 +15,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from SS_SurfaceGen import *
 
-def saxs(profile: np.ndarray) -> np.ndarray:
+def saxs(profile: np.ndarray, plot = True) -> np.ndarray:
     '''
     Simulate SAXS profile
 
@@ -32,14 +32,15 @@ def saxs(profile: np.ndarray) -> np.ndarray:
         raise ValueError("This function only works for 1d array. Use saxs2d() for 2d.")
     xs_img = np.fft.fft(profile)
     xs_img = np.roll(xs_img, int(len(xs_img)/2))
-    plt.figure()
-    plt.title("SAXS image")
-    plt.xlabel("x [mm]")
-    plt.ylabel("Intensity [A.U.]")
-    plt.plot(range(len(xs_img)), xs_img)
+    if plot:
+        plt.figure()
+        plt.title("SAXS image")
+        plt.xlabel("x [mm]")
+        plt.ylabel("Intensity [A.U.]")
+        plt.plot(range(len(xs_img)), xs_img)
     return np.square(np.abs(xs_img))
 
-def saxs2d(profile, log = False) -> np.ndarray:
+def saxs2d(profile, plot = True, log = False) -> np.ndarray:
     '''
     Simulate SAXS profile in 2d
 
@@ -55,15 +56,16 @@ def saxs2d(profile, log = False) -> np.ndarray:
     xs_img = np.roll(xs_img, int(len(xs_img)/2), 0)
     xs_img = np.roll(xs_img, int(len(xs_img[0])/2), 1)
 
-    plt.figure()
-    plt.title("SAXS intensity")
-    plt.xlabel("x [mm]")
-    plt.ylabel("y [mm]")
-    if log:
-        plt.imshow(np.log(np.abs(xs_img)))
-    else:
-        plt.imshow(np.square(np.abs(xs_img)))
-    plt.colorbar(label="Intensity [A.U.]")
+    if plot:
+        plt.figure()
+        plt.title("SAXS intensity")
+        plt.xlabel("x [mm]")
+        plt.ylabel("y [mm]")
+        if log:
+            plt.imshow(np.log(np.abs(xs_img)))
+        else:
+            plt.imshow(np.square(np.abs(xs_img)))
+        plt.colorbar(label="Intensity [A.U.]")
     return np.square(np.abs(xs_img))
 
 if __name__ == "__main__":

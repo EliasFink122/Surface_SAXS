@@ -10,11 +10,15 @@ Methods:
         reconstruct surface profile from intensity
     deconvolve:
         correction for optical system
+    compare:
+        plot actual and reconstructed surfaces next to each other
 """
 import numpy as np
 import matplotlib.pyplot as plt
+from SS_SurfaceGen import rough, sinusoidal, crack, blob, laser
+from SS_Simulation import saxs, saxs2d
 
-def transform(arr: np.ndarray) -> np.ndarray:
+def transform(arr: np.ndarray, plot = True) -> np.ndarray:
     '''
     Transform detector read in to surface profile
 
@@ -34,11 +38,13 @@ def transform(arr: np.ndarray) -> np.ndarray:
         plt.title("Reconstructed surface")
         profile = np.abs(np.fft.ifft(arr))
         profile = np.roll(profile, int(len(profile)/2))
-        profile = deconvolve(profile)
+        # profile = deconvolve(profile)
         profile = profile/np.max(profile)
         plt.plot(range(len(profile)), profile)
         plt.xlabel("x [μm]")
         plt.ylabel("Height [μm]")
+        if not plot:
+            plt.close()
         return profile
 
     if len(np.shape(arr)) == 2:
@@ -47,7 +53,7 @@ def transform(arr: np.ndarray) -> np.ndarray:
         profile = np.abs(np.fft.ifft2(arr))
         profile = np.roll(profile, int(len(profile)/2), 0)
         profile = np.roll(profile, int(len(profile[0])/2), 1)
-        profile = deconvolve(profile)
+        # profile = deconvolve(profile)
         profile = profile/np.max(profile)
         ax1.set_title("1-d surface")
         ax1.plot(range(len(profile[int(len(profile)/2)])),
@@ -60,6 +66,8 @@ def transform(arr: np.ndarray) -> np.ndarray:
         ax2.set_ylabel("y [μm]")
         plt.colorbar(img, ax=ax2, label="Height [μm]")
         fig.tight_layout()
+        if not plot:
+            plt.close()
         return profile
     raise ValueError("Input array needs to be one- or two-dimensional.")
 
@@ -68,10 +76,10 @@ def deconvolve(arr: np.ndarray) -> np.ndarray:
     Deconvolve one or two dimensional array
 
     Args:
-        arr: input array
+        arr: input signal
 
     Returns:
-        devonvolved
+        devonvolved signal
     '''
     if len(np.shape(arr)) == 1:
         for i, val in enumerate(arr):
@@ -87,7 +95,34 @@ def deconvolve(arr: np.ndarray) -> np.ndarray:
                 arr[i, j] = val/decon
     return arr
 
+def compare(num: int):
+    '''
+    Compare actual surface with reconstructed
+
+    Args:
+        num: number of surface elements
+    '''
+    fig, (ax1, ax2) = plt.subplots(2, 1)
+    fig.suptitle("Comparison between surfaces")
+
+    profile = laser(num, amp=1, width=num/10)
+    surf1 = ax1.imshow(profile)
+    ax1.set_title("Surface profile")
+    ax1.set_xlabel("x [μm]")
+    ax1.set_ylabel("y [μm]")
+    plt.colorbar(surf1, ax=ax1)
+
+    img = saxs2d(profile, False)
+
+    reconstructed = transform(img)
+    surf2 = ax2.imshow(reconstructed)
+    ax2.set_title("Reconstructed profile")
+    ax2.set_xlabel("x [μm]")
+    ax2.set_ylabel("y [μm]")
+    plt.colorbar(surf2, ax=ax2)
+
 if __name__ == '__main__':
-    data = np.loadtxt('data.txt')
-    pattern = transform(data)
+    # data = np.loadtxt('data.txt')
+    # pattern = transform(data)
+    compare(1000)
     plt.show()
